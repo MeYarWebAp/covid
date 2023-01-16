@@ -43,7 +43,7 @@ st.set_page_config(layout="wide")  # this needs to be the first Streamlit comman
 st.markdown("<h2 style='text-align: center;color:blue'>COVID-19 Response-Measures Future-Efficiency Estimator</h2>", unsafe_allow_html=True )
 crl=create_onedrive_directdownload (onedrive_link)
 dataset=pd.read_excel(crl)
-#dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
+dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
 
 st.sidebar.title("Control Panel")
 left_col, middle_col, right_col = st.columns(3)
@@ -80,8 +80,8 @@ number_of_implemented_responses= st.sidebar.number_input(
 st.sidebar.subheader("Decision criteria")
 worst_case_threshold = st.sidebar.slider(
     "Worst-case deaths cases ratio threshold",
-    min_value=0.01,
-    max_value=0.5,
+    min_value=0.001,
+    max_value=0.2,
     value=0.005,
     step=0.001,
     help="A deaths cases ratio below this value is defined to be the worst-case scenario",
@@ -89,7 +89,7 @@ worst_case_threshold = st.sidebar.slider(
 
 worst_case_max_proba = st.sidebar.slider(
     "Max acceptable worst-case probability",
-    min_value=0.0,
+    min_value=0.001,
     max_value=0.2,
     value=0.005,
     step=0.001,

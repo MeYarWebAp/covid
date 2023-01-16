@@ -57,8 +57,8 @@ axis_title_size = 16
 
 ## User inputs on the control panel
 st.sidebar.subheader("Prior belief about the Response-Measures efficiency rate")
-if not st.sidebar.checkbox("hide dataset?"):
-    st.sidebar.dataframe(dataset)
+#if st.sidebar.checkbox("display dataset?"):
+st.sidebar.dataframe(dataset)
 prior_daily_cases = st.sidebar.number_input(
     "Number of prior days",
     min_value=1,
@@ -80,19 +80,19 @@ number_of_implemented_responses= st.sidebar.number_input(
 st.sidebar.subheader("Decision criteria")
 worst_case_threshold = st.sidebar.slider(
     "Worst-case deaths cases ratio threshold",
-    min_value=0.001,
-    max_value=0.2,
-    value=0.005,
-    step=0.001,
+    min_value=0.01,
+    max_value=0.5,
+    value=0.08,
+    step=0.005,
     help="A deaths cases ratio below this value is defined to be the worst-case scenario",
 )
 
 worst_case_max_proba = st.sidebar.slider(
     "Max acceptable worst-case probability",
-    min_value=0.001,
-    max_value=0.2,
-    value=0.005,
-    step=0.001,
+    min_value=0.0,
+    max_value=1.0,
+    value=0.1,
+    step=0.01,
     help="The larger this threshold, the more risk we're willing to accept that the worst-case scenario might happen.",
 )
 #dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
@@ -137,9 +137,9 @@ for t in range(number_of_implemented_responses):
         "p90": posterior.ppf(0.9),
     }
 
-graphicmax=0.99999
+#0.9999=0.99999
 ## Get the max useful daily deaths cases ratio value to show in the distribution plots
-xmax = max(prior.ppf(graphicmax), posterior.ppf(graphicmax))
+xmax = max(prior.ppf(0.9999), posterior.ppf(0.9999))
 distro_grid = np.linspace(0, xmax, 300)
 
 
@@ -198,7 +198,7 @@ fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, 0.99999])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, xmax])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),

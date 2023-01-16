@@ -137,7 +137,7 @@ for t in range(number_of_implemented_responses):
         "p90": posterior.ppf(0.9),
     }
 
-graphicmax=0.66
+graphicmax=0.8
 ## Get the max useful daily deaths cases ratio value to show in the distribution plots
 xmax = max(prior.ppf(graphicmax), posterior.ppf(graphicmax))
 distro_grid = np.linspace(0, xmax, 300)
@@ -198,7 +198,7 @@ fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, xmax])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, .5])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),
@@ -261,7 +261,7 @@ middle_col.altair_chart((annotation_layer).interactive(), use_container_width=Tr
 
 ## Draw the posterior zoomed in
 xmin = posterior.ppf(0.0001)
-xmax = posterior.ppf(graphicmax)
+xmax = posterior.ppf(0.9999)
 distro_grid = np.linspace(xmin, xmax, 300)
 
 posterior_pdf = pd.DataFrame(

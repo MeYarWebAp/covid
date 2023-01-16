@@ -137,7 +137,7 @@ for t in range(number_of_implemented_responses):
         "p90": posterior.ppf(0.9),
     }
 
-graphicmax=0.99999
+graphicmax=0.66
 ## Get the max useful daily deaths cases ratio value to show in the distribution plots
 xmax = max(prior.ppf(graphicmax), posterior.ppf(graphicmax))
 distro_grid = np.linspace(0, xmax, 300)

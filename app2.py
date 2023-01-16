@@ -275,7 +275,7 @@ distro_fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[xmin, xmax])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[xmin, .1])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),

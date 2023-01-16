@@ -82,7 +82,7 @@ worst_case_threshold = st.sidebar.slider(
     "Worst-case deaths cases ratio threshold",
     min_value=0.01,
     max_value=0.5,
-    value=0.08,
+    value=0.005,
     step=0.005,
     help="A deaths cases ratio below this value is defined to be the worst-case scenario",
 )
@@ -91,7 +91,7 @@ worst_case_max_proba = st.sidebar.slider(
     "Max acceptable worst-case probability",
     min_value=0.0,
     max_value=1.0,
-    value=0.1,
+    value=0.005,
     step=0.01,
     help="The larger this threshold, the more risk we're willing to accept that the worst-case scenario might happen.",
 )
@@ -137,7 +137,7 @@ for t in range(number_of_implemented_responses):
         "p90": posterior.ppf(0.9),
     }
 
-graphicmax=0.8
+graphicmax=0.99999
 ## Get the max useful daily deaths cases ratio value to show in the distribution plots
 xmax = max(prior.ppf(graphicmax), posterior.ppf(graphicmax))
 distro_grid = np.linspace(0, xmax, 300)
@@ -198,7 +198,7 @@ fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, .5])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, 0.99999])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),

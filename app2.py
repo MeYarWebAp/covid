@@ -57,7 +57,7 @@ axis_title_size = 16
 
 ## User inputs on the control panel
 st.sidebar.subheader("Prior belief about the Response-Measures efficiency rate")
-if st.sidebar.checkbox("display dataset?"):
+if not st.sidebar.checkbox("hide dataset?"):
     st.sidebar.dataframe(dataset)
 prior_daily_cases = st.sidebar.number_input(
     "Number of prior days",

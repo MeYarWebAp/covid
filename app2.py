@@ -83,16 +83,16 @@ worst_case_threshold = st.sidebar.slider(
     min_value=0.01,
     max_value=0.5,
     value=0.005,
-    step=0.005,
+    step=0.001,
     help="A deaths cases ratio below this value is defined to be the worst-case scenario",
 )
 
 worst_case_max_proba = st.sidebar.slider(
     "Max acceptable worst-case probability",
     min_value=0.0,
-    max_value=1.0,
+    max_value=0.2,
     value=0.005,
-    step=0.01,
+    step=0.001,
     help="The larger this threshold, the more risk we're willing to accept that the worst-case scenario might happen.",
 )
 #dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)

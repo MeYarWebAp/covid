@@ -85,7 +85,7 @@ worst_case_max_proba = st.sidebar.slider(
 #dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
 
 
-prior = stats.beta(f.fitted_param["beta"][0], f.fitted_param["beta"][1])
+prior = stats.beta(f.fitted_param["beta"][0], f.fitted_param["beta"][1],f.fitted_param["beta"][2],f.fitted_param["beta"][3])
 
 
 ## Show key results over time. The index value indicates the data for that day has been

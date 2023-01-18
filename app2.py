@@ -44,7 +44,7 @@ axis_title_size = 16
 
 ## User inputs on the control panel
 st.sidebar.subheader("Prior belief about the Response-Measures efficiency rate")
-se.sidebar.selectbox("evaluation criterion",["7-days incidence of the action","daily deaths cases ratio"])
+st.sidebar.selectbox("evaluation criterion",["7-days incidence of the action","daily deaths cases ratio"])
 #if st.sidebar.checkbox("display dataset?"):
 st.sidebar.dataframe(dataset)
 

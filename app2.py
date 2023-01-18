@@ -69,7 +69,7 @@ worst_case_threshold = st.sidebar.slider(
     max_value=0.020,
     value=0.005,
     step=0.001,
-    help="A deaths cases ratio below this value is defined to be the worst-case scenario",
+    help="A deaths cases ratio above this value is defined to be the worst-case scenario",
     format="%f",
 )
 

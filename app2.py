@@ -12,7 +12,7 @@ import streamlit as st
 import seaborn as sns
 from fitter import Fitter, get_common_distributions, get_distributions
 st.set_option('deprecation.showPyplotGlobalUse', False)
-onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQE0adb-zEMfPAI7?e=I2dgYa"
+onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQXeo9qIu_prTFHx?e=1Behqf"
 @st.cache
 def create_onedrive_directdownload (onedrive_link):
     data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))

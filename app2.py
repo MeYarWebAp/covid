@@ -14,7 +14,7 @@ from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
-
+st.stop()
 #import seaborn.apionly as sns
 #%matplotlib inline
 plt.style.use('bmh')

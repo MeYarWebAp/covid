@@ -13,6 +13,8 @@ import seaborn as sns
 from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
 import matplotlib.pyplot as plt
+from sklearn import preprocessing
+
 #import seaborn.apionly as sns
 #%matplotlib inline
 plt.style.use('bmh')

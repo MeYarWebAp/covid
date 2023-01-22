@@ -6,3 +6,4 @@ streamlit
 seaborn
 fitter
 openpyxl
+pymc3

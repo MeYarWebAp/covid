@@ -9,11 +9,14 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import streamlit as st
-#import seaborn as sns
+import seaborn as sns
 from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
 import matplotlib.pyplot as plt
-import seaborn.apionly as sns
+#import seaborn.apionly as sns
+%matplotlib inline
+plt.style.use('bmh')
+colors = ['#348ABD', '#A60628', '#7A68A6', '#467821', '#D55E00','#CC79A7', '#56B4E9', '#009E73', '#F0E442', '#0072B2']
 st.set_option('deprecation.showPyplotGlobalUse', False)
 onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQXeo9qIu_prTFHx?e=1Behqf"
 @st.cache

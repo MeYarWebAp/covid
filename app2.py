@@ -412,3 +412,25 @@ for p in participants:
         trace = pm.sample(20000, step, start=start, progressbar=True)
         
         indiv_traces[p] = trace
+fig, axs = plt.subplots(3,2, figsize=(12, 6))
+axs = axs.ravel()
+y_left_max = 2
+y_right_max = 2000
+x_lim = 60
+ix = [3,4,6]
+
+for i, j, p in zip([0,1,2], [0,2,4], participants[ix]):
+    axs[j].set_title('Observed: %s' % p)
+    axs[j].hist(messages[messages['prev_sender']==p]['time_delay_seconds'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+    axs[j].set_ylim([0, y_left_max])
+
+for i, j, p in zip([0,1,2], [1,3,5], participants[ix]):
+    axs[j].set_title('Posterior predictive distribution: %s' % p)
+    axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
+    axs[j].set_ylim([0, y_right_max])
+
+axs[4].set_xlabel('Response time (seconds)')
+axs[5].set_xlabel('Response time (seconds)')
+
+plt.tight_layout()
+st.pyplot()

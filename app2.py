@@ -387,3 +387,26 @@ _ = ax.set_xlabel('Previous Sender')
 _ = ax.set_ylabel('Number of messages')
 _ = plt.xticks(rotation=45)
 st.pyplot()
+indiv_traces = {}
+
+# Convert categorical variables to integer
+le = preprocessing.LabelEncoder()
+participants_idx = le.fit_transform(messages['prev_sender'])
+participants = le.classes_
+n_participants = len(participants)
+
+for p in participants:
+    with pm.Model() as model:
+        alpha = pm.Uniform('alpha', lower=0, upper=100)
+        mu = pm.Uniform('mu', lower=0, upper=100)
+        
+        data = messages[messages['prev_sender']==p]['time_delay_seconds'].values
+        y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
+
+        y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
+        
+        start = pm.find_MAP()
+        step = pm.Metropolis()
+        trace = pm.sample(20000, step, start=start, progressbar=True)
+        
+        indiv_traces[p] = trace

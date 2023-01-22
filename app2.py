@@ -14,7 +14,7 @@ from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
 import matplotlib.pyplot as plt
 #import seaborn.apionly as sns
-%matplotlib inline
+#%matplotlib inline
 plt.style.use('bmh')
 colors = ['#348ABD', '#A60628', '#7A68A6', '#467821', '#D55E00','#CC79A7', '#56B4E9', '#009E73', '#F0E442', '#0072B2']
 st.set_option('deprecation.showPyplotGlobalUse', False)

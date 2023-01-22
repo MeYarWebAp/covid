@@ -1,7 +1,7 @@
 """
 
 """
-
+import itertools
 import base64
 import altair as alt
 import copy
@@ -9,9 +9,11 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import streamlit as st
-import seaborn as sns
+#import seaborn as sns
 from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
+import matplotlib.pyplot as plt
+import seaborn.apionly as sns
 st.set_option('deprecation.showPyplotGlobalUse', False)
 onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQXeo9qIu_prTFHx?e=1Behqf"
 @st.cache

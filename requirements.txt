@@ -7,3 +7,4 @@ seaborn
 fitter
 openpyxl
 pymc3
+scikit-learn

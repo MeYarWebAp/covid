@@ -380,3 +380,10 @@ right_col.markdown(f"**Final decision:** {decision} :{emoji}:")
 crl_h=create_onedrive_directdownload (onedrive_link_h)
 dataset_h=pd.read_excel(crl_h)
 st.write(dataset_h)
+messages=dataset_h
+ax = messages.groupby('prev_sender')['conversation_id'].size().plot(
+    kind='bar', figsize=(12,3), title='Number of messages sent per recipient', color=colors[0])
+_ = ax.set_xlabel('Previous Sender')
+_ = ax.set_ylabel('Number of messages')
+_ = plt.xticks(rotation=45)
+st.pyplot()

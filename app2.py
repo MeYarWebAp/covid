@@ -59,71 +59,71 @@ le = preprocessing.LabelEncoder()
 responses_idx = le.fit_transform(covidbook['Response Type'])
 responses = le.classes_
 n_responses = len(responses)
+if 1==2:
+    for p in responses:
+        with pm.Model() as model:
+            alpha = pm.Uniform('alpha', lower=0, upper=100)
+            mu = pm.Uniform('mu', lower=0, upper=100)
 
-for p in responses:
-    with pm.Model() as model:
-        alpha = pm.Uniform('alpha', lower=0, upper=100)
-        mu = pm.Uniform('mu', lower=0, upper=100)
-        
-        data = covidbook[covidbook['Response Type']==p]['Normalized_daily_deaths'].values
-        y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
+            data = covidbook[covidbook['Response Type']==p]['Normalized_daily_deaths'].values
+            y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
 
-        y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
-        
-        start = pm.find_MAP()
-        step = pm.Metropolis()
-        trace = pm.sample(20000, step, start=start, progressbar=True)
-        
-        indiv_traces[p] = trace
+            y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
 
-fig, axs = plt.subplots(3,2, figsize=(12, 6))
-axs = axs.ravel()
-y_left_max = 2
-y_right_max = 2000
-x_lim = 60
-ix = [3,4,6]
+            start = pm.find_MAP()
+            step = pm.Metropolis()
+            trace = pm.sample(20000, step, start=start, progressbar=True)
 
-for i, j, p in zip([0,1,2], [0,2,4], responses[ix]):
-    axs[j].set_title('Observed: %s' % p)
-    axs[j].hist(covidbook[covidbook['Response Type']==p]['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
-    axs[j].set_ylim([0, y_left_max])
+            indiv_traces[p] = trace
 
-for i, j, p in zip([0,1,2], [1,3,5], responses[ix]):
-    axs[j].set_title('Posterior predictive distribution: %s' % p)
-    axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
-    axs[j].set_ylim([0, y_right_max])
+    fig, axs = plt.subplots(3,2, figsize=(12, 6))
+    axs = axs.ravel()
+    y_left_max = 2
+    y_right_max = 2000
+    x_lim = 60
+    ix = [3,4,6]
 
-axs[4].set_xlabel('Normalized_daily_deaths')
-axs[5].set_xlabel('Normalized_daily_deaths')
+    for i, j, p in zip([0,1,2], [0,2,4], responses[ix]):
+        axs[j].set_title('Observed: %s' % p)
+        axs[j].hist(covidbook[covidbook['Response Type']==p]['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+        axs[j].set_ylim([0, y_left_max])
 
-plt.tight_layout()
-st.pyplot()
+    for i, j, p in zip([0,1,2], [1,3,5], responses[ix]):
+        axs[j].set_title('Posterior predictive distribution: %s' % p)
+        axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
+        axs[j].set_ylim([0, y_right_max])
 
-combined_y_pred = np.concatenate([v.get_values('y_pred') for k, v in indiv_traces.items()])
+    axs[4].set_xlabel('Normalized_daily_deaths')
+    axs[5].set_xlabel('Normalized_daily_deaths')
 
-x_lim = 100
-y_pred = trace.get_values('y_pred')
+    plt.tight_layout()
+    st.pyplot()
 
-fig = plt.figure(figsize=(12,6))
-fig.add_subplot(211)
+    combined_y_pred = np.concatenate([v.get_values('y_pred') for k, v in indiv_traces.items()])
 
-fig.add_subplot(211)
+    x_lim = 100
+    y_pred = trace.get_values('y_pred')
 
-_ = plt.hist(combined_y_pred, range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])   
-_ = plt.xlim(1, x_lim)
-_ = plt.ylim(0, 20000)
-_ = plt.ylabel('Frequency')
-_ = plt.title('Posterior predictive distribution')
+    fig = plt.figure(figsize=(12,6))
+    fig.add_subplot(211)
 
-fig.add_subplot(212)
+    fig.add_subplot(211)
 
-_ = plt.hist(covidbook['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
-_ = plt.xlim(0, x_lim)
-_ = plt.xlabel('Normalized_daily_deaths')
-_ = plt.ylim(0, 20)
-_ = plt.ylabel('Frequency')
-_ = plt.title('Distribution of observed data')
-st.pyplot()
+    _ = plt.hist(combined_y_pred, range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])   
+    _ = plt.xlim(1, x_lim)
+    _ = plt.ylim(0, 20000)
+    _ = plt.ylabel('Frequency')
+    _ = plt.title('Posterior predictive distribution')
+
+    fig.add_subplot(212)
+
+    _ = plt.hist(covidbook['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+    _ = plt.xlim(0, x_lim)
+    _ = plt.xlabel('Normalized_daily_deaths')
+    _ = plt.ylim(0, 20)
+    _ = plt.ylabel('Frequency')
+    _ = plt.title('Distribution of observed data')
+    st.pyplot()
 
 
 

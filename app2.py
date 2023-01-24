@@ -43,8 +43,8 @@ dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 st.write(dataset_h)
 covidbook=dataset_h
 from matplotlib import colors
-N, bins, patches = axs.hist(50, bins = 50)
-fracs = ((N**(1 / 5)) / N.max())
+#N, bins, patches = axs.hist(50, bins = 50)
+fracs = 50
 norm = colors.Normalize(fracs.min(), fracs.max())
 ax = covidbook.groupby('Response Type')['Response Intensity'].size().plot(
     kind='bar', figsize=(12,3), title='Number of implementation done per response', color=plt.cm.viridis(norm(thisfrac)))

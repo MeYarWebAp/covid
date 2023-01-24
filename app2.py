@@ -169,7 +169,7 @@ _ = plt.title('Posterior predictive distribution')
 fig.add_subplot(212)
 
 _ = plt.hist(covidbook['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
-_ = plt.xlabel(‘Normalized daily deaths')
+_ = plt.xlabel('Normalized daily deaths')
 _ = plt.ylabel('Frequency')
 _ = plt.title('Distribution of observed data')
 

@@ -45,9 +45,9 @@ covidbook=dataset_h
 from matplotlib import colors
 #N, bins, patches = axs.hist(50, bins = 50)
 #fracs = 50
-norm = colors.Normalize(1, 50)
+#norm = colors.Normalize(1, 50)
 ax = covidbook.groupby('Response Type')['Response Intensity'].size().plot(
-    kind='bar', figsize=(12,3), title='Number of implementation done per response', color=colors[0])
+    kind='bar', figsize=(12,3), title='Number of implementation done per response', color=colors[1])
 _ = ax.set_xlabel('Response code')
 _ = ax.set_ylabel('Number of implementation')
 _ = plt.xticks(rotation=45)

@@ -38,8 +38,8 @@ st.set_page_config(layout="wide")  # this needs to be the first Streamlit comman
 
 crl_h=create_onedrive_directdownload (onedrive_link_h)
 dataset_h=pd.read_excel(crl_h)
-dataset_h.drop(dataset.columns[[0,1]], axis = 1, inplace = True)
-dataset_h.drop(dataset.columns[[0,1]], axis = 1, inplace = True)
+dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
+dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 st.write(dataset_h)
 covidbook=dataset_h
 ax = covidbook.groupby('Response Intensity')['Response Type'].size().plot(

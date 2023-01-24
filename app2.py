@@ -129,7 +129,7 @@ st.pyplot()
 
 with pm.Model() as model:
     hyper_alpha_sd = pm.Uniform('hyper_alpha_sd', lower=0, upper=50)
-    hyper_alpha_mu = pm.Uniform('hyper_alpha_mu', lower=0, upper=50)
+    hyper_alpha_mu = pm.Uniform('hyper_alpha_mu', lower=0, upper=10)
     
     hyper_mu_sd = pm.Uniform('hyper_mu_sd', lower=0, upper=50)
     hyper_mu_mu = pm.Uniform('hyper_mu_mu', lower=0, upper=50)
@@ -150,7 +150,7 @@ with pm.Model() as model:
     start = pm.find_MAP()
     step = pm.Metropolis()
     hierarchical_trace = pm.sample(20000, step, progressbar=True)
-_ = pm.traceplot(hierarchical_trace)#[12000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
+_ = pm.plot_trace(hierarchical_trace)#[12000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
 st.pyplot()
 
 

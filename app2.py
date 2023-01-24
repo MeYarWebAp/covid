@@ -99,6 +99,31 @@ axs[5].set_xlabel('Normalized_daily_deaths')
 plt.tight_layout()
 st.pyplot()
 
+combined_y_pred = np.concatenate([v.get_values('y_pred') for k, v in indiv_traces.items()])
+
+x_lim = 100
+y_pred = trace.get_values('y_pred')
+
+fig = plt.figure(figsize=(12,6))
+fig.add_subplot(211)
+
+fig.add_subplot(211)
+
+_ = plt.hist(combined_y_pred, range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])   
+_ = plt.xlim(1, x_lim)
+_ = plt.ylim(0, 20000)
+_ = plt.ylabel('Frequency')
+_ = plt.title('Posterior predictive distribution')
+
+fig.add_subplot(212)
+
+_ = plt.hist(messages[' Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+_ = plt.xlim(0, x_lim)
+_ = plt.xlabel('Normalized_daily_deaths')
+_ = plt.ylim(0, 20)
+_ = plt.ylabel('Frequency')
+_ = plt.title('Distribution of observed data')
+st.pyplot()
 
 
 

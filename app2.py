@@ -56,16 +56,16 @@ indiv_traces = {}
 st.stop()
 # Convert categorical variables to integer
 le = preprocessing.LabelEncoder()
-participants_idx = le.fit_transform(messages['prev_sender'])
-participants = le.classes_
-n_participants = len(participants)
+response_idx = le.fit_transform(covidbook['Response Type'])
+responses = le.classes_
+n_responses = len(responses)
 
-for p in participants:
+for r in responses:
     with pm.Model() as model:
-        alpha = pm.Uniform('alpha', lower=0, upper=100)
-        mu = pm.Uniform('mu', lower=0, upper=100)
+        alpha = pm.Uniform('alpha', lower=0, upper=1000)
+        mu = pm.Uniform('mu', lower=0, upper=1000)
         
-        data = messages[messages['prev_sender']==p]['time_delay_seconds'].values
+        data = covidbook[covidbook['Response Type']==r]['daily_deaths'].values
         y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
 
         y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
@@ -74,26 +74,26 @@ for p in participants:
         step = pm.Metropolis()
         trace = pm.sample(20000, step, start=start, progressbar=True)
         
-        indiv_traces[p] = trace
+        indiv_traces[r] = trace
 fig, axs = plt.subplots(3,2, figsize=(12, 6))
 axs = axs.ravel()
 y_left_max = 2
 y_right_max = 2000
-x_lim = 60
-ix = [3,4,6]
+x_lim = 1300
+ix = [3,20,35]
 
-for i, j, p in zip([0,1,2], [0,2,4], participants[ix]):
+for i, j, r in zip([0,1,2], [0,2,4], responses[ix]):
     axs[j].set_title('Observed: %s' % p)
-    axs[j].hist(messages[messages['prev_sender']==p]['time_delay_seconds'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+    axs[j].hist(covidbook[covidbook['Response Type']==r]['daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
     axs[j].set_ylim([0, y_left_max])
 
-for i, j, p in zip([0,1,2], [1,3,5], participants[ix]):
+for i, j, r in zip([0,1,2], [1,3,5], responses[ix]):
     axs[j].set_title('Posterior predictive distribution: %s' % p)
-    axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
+    axs[j].hist(indiv_traces[r].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
     axs[j].set_ylim([0, y_right_max])
 
-axs[4].set_xlabel('Response time (seconds)')
-axs[5].set_xlabel('Response time (seconds)')
+axs[4].set_xlabel('daily_deaths')
+axs[5].set_xlabel('daily_deaths')
 
 plt.tight_layout()
 st.pyplot()

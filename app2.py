@@ -42,7 +42,7 @@ dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 st.write(dataset_h)
 covidbook=dataset_h
-ax = covidbook.groupby('Response Intensity')['Response Type'].size().plot(
+ax = covidbook.groupby('Response Type')['Response Intensity'].size().plot(
     kind='bar', figsize=(12,3), title='Number of implementation done per response', color=colors[0])
 _ = ax.set_xlabel('Response code')
 _ = ax.set_ylabel('Number of implementation')

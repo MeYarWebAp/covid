@@ -149,11 +149,11 @@ with pm.Model() as model:
     
     start = pm.find_MAP()
     step = pm.Metropolis()
-    hierarchical_trace = pm.sample(50000, step, progressbar=True)
-_ = pm.plot_trace(hierarchical_trace[30000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
+    hierarchical_trace = pm.sample(20000, step, progressbar=True)
+_ = pm.plot_trace(hierarchical_trace[1:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
 st.pyplot()
 
-x_lim = 60
+x_lim = 100
 y_pred = hierarchical_trace.get_values('y_pred')[::1000].ravel()
 
 fig = plt.figure(figsize=(12,6))

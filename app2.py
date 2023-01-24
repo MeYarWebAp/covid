@@ -149,9 +149,32 @@ with pm.Model() as model:
     
     start = pm.find_MAP()
     step = pm.Metropolis()
-    hierarchical_trace = pm.sample(100000, step, progressbar=True)
-_ = pm.plot_trace(hierarchical_trace[60000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
+    hierarchical_trace = pm.sample(50000, step, progressbar=True)
+_ = pm.plot_trace(hierarchical_trace[30000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
 st.pyplot()
+
+x_lim = 60
+y_pred = hierarchical_trace.get_values('y_pred')[::1000].ravel()
+
+fig = plt.figure(figsize=(12,6))
+fig.add_subplot(211)
+
+fig.add_subplot(211)
+
+_ = plt.hist(y_pred, range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])   
+_ = plt.xlim(1, x_lim)
+_ = plt.ylabel('Frequency')
+_ = plt.title('Posterior predictive distribution')
+
+fig.add_subplot(212)
+
+_ = plt.hist(covidbook['Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+_ = plt.xlabel(‘Normalized daily deaths')
+_ = plt.ylabel('Frequency')
+_ = plt.title('Distribution of observed data')
+
+plt.tight_layout()
+
 
 
 

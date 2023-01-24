@@ -42,7 +42,7 @@ def datas():
     dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
     return dataset_h
 #dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
-dataset_h=datas
+dataset_h=datas()
 st.write(dataset_h)
 covidbook=dataset_h
 

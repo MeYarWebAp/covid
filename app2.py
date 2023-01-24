@@ -53,7 +53,7 @@ _ = ax.set_ylabel('Number of implementation')
 _ = plt.xticks(rotation=45)
 st.pyplot()
 indiv_traces = {}
-st.stop()
+#st.stop()
 # Convert categorical variables to integer
 le = preprocessing.LabelEncoder()
 response_idx = le.fit_transform(covidbook['Response Type'])

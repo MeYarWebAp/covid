@@ -48,7 +48,7 @@ covidbook=dataset_h
 
 ax = covidbook.groupby('Response Type')['Response Intensity'].size().plot(
     kind='bar', figsize=(12,3), title='Number of implementation per response', color=colors[0])
-_ = ax.set_xlabel('Previous Sender')
+_ = ax.set_xlabel('Response Type')
 _ = ax.set_ylabel('Number of messages')
 _ = plt.xticks(rotation=45)
 _ = ax.set_xlabel('Response code')
@@ -177,7 +177,7 @@ _ = plt.ylabel('Frequency')
 _ = plt.title('Distribution of observed data')
 
 plt.tight_layout()
-
+st.pyplot()
 
 
 

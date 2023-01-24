@@ -117,7 +117,7 @@ _ = plt.title('Posterior predictive distribution')
 
 fig.add_subplot(212)
 
-_ = plt.hist(messages[' Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+_ = plt.hist(covidbook[' Normalized_daily_deaths'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
 _ = plt.xlim(0, x_lim)
 _ = plt.xlabel('Normalized_daily_deaths')
 _ = plt.ylim(0, 20)

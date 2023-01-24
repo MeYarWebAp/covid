@@ -14,7 +14,7 @@ from fitter import Fitter, get_common_distributions, get_distributions
 import pymc3 as pm
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
-st.stop()
+#st.stop()
 #import seaborn.apionly as sns
 #%matplotlib inline
 plt.style.use('bmh')
@@ -35,6 +35,76 @@ alt.renderers.set_embed_options(scaleFactor=2)
 
 ## Basic setup and app layout
 st.set_page_config(layout="wide")  # this needs to be the first Streamlit command called
+
+crl_h=create_onedrive_directdownload (onedrive_link_h)
+dataset_h=pd.read_excel(crl_h)
+st.write(dataset_h)
+messages=dataset_h
+ax = messages.groupby('prev_sender')['conversation_id'].size().plot(
+    kind='bar', figsize=(12,3), title='Number of messages sent per recipient', color=colors[0])
+_ = ax.set_xlabel('Previous Sender')
+_ = ax.set_ylabel('Number of messages')
+_ = plt.xticks(rotation=45)
+st.pyplot()
+indiv_traces = {}
+st.stop()
+# Convert categorical variables to integer
+le = preprocessing.LabelEncoder()
+participants_idx = le.fit_transform(messages['prev_sender'])
+participants = le.classes_
+n_participants = len(participants)
+
+for p in participants:
+    with pm.Model() as model:
+        alpha = pm.Uniform('alpha', lower=0, upper=100)
+        mu = pm.Uniform('mu', lower=0, upper=100)
+        
+        data = messages[messages['prev_sender']==p]['time_delay_seconds'].values
+        y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
+
+        y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
+        
+        start = pm.find_MAP()
+        step = pm.Metropolis()
+        trace = pm.sample(20000, step, start=start, progressbar=True)
+        
+        indiv_traces[p] = trace
+fig, axs = plt.subplots(3,2, figsize=(12, 6))
+axs = axs.ravel()
+y_left_max = 2
+y_right_max = 2000
+x_lim = 60
+ix = [3,4,6]
+
+for i, j, p in zip([0,1,2], [0,2,4], participants[ix]):
+    axs[j].set_title('Observed: %s' % p)
+    axs[j].hist(messages[messages['prev_sender']==p]['time_delay_seconds'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
+    axs[j].set_ylim([0, y_left_max])
+
+for i, j, p in zip([0,1,2], [1,3,5], participants[ix]):
+    axs[j].set_title('Posterior predictive distribution: %s' % p)
+    axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
+    axs[j].set_ylim([0, y_right_max])
+
+axs[4].set_xlabel('Response time (seconds)')
+axs[5].set_xlabel('Response time (seconds)')
+
+plt.tight_layout()
+st.pyplot()
+
+
+
+
+
+
+
+
+
+
+
+
+
+st.stop()
 st.markdown("<h2 style='text-align: center;color:blue'>COVID-19 Response-Measures Future-Efficiency Estimator</h2>", unsafe_allow_html=True )
 crl=create_onedrive_directdownload (onedrive_link)
 dataset=pd.read_excel(crl)
@@ -379,58 +449,3 @@ right_col.markdown(f"**Final decision:** {decision} :{emoji}:")
 #right_col.write(f"***Final decision:*** {decision} :{emoji}:")
 #right_col.subheader(f"***Final decision:*** {decision} :{emoji}:")
 #st.dataframe(results)
-crl_h=create_onedrive_directdownload (onedrive_link_h)
-dataset_h=pd.read_excel(crl_h)
-st.write(dataset_h)
-messages=dataset_h
-ax = messages.groupby('prev_sender')['conversation_id'].size().plot(
-    kind='bar', figsize=(12,3), title='Number of messages sent per recipient', color=colors[0])
-_ = ax.set_xlabel('Previous Sender')
-_ = ax.set_ylabel('Number of messages')
-_ = plt.xticks(rotation=45)
-st.pyplot()
-indiv_traces = {}
-
-# Convert categorical variables to integer
-le = preprocessing.LabelEncoder()
-participants_idx = le.fit_transform(messages['prev_sender'])
-participants = le.classes_
-n_participants = len(participants)
-
-for p in participants:
-    with pm.Model() as model:
-        alpha = pm.Uniform('alpha', lower=0, upper=100)
-        mu = pm.Uniform('mu', lower=0, upper=100)
-        
-        data = messages[messages['prev_sender']==p]['time_delay_seconds'].values
-        y_est = pm.NegativeBinomial('y_est', mu=mu, alpha=alpha, observed=data)
-
-        y_pred = pm.NegativeBinomial('y_pred', mu=mu, alpha=alpha)
-        
-        start = pm.find_MAP()
-        step = pm.Metropolis()
-        trace = pm.sample(20000, step, start=start, progressbar=True)
-        
-        indiv_traces[p] = trace
-fig, axs = plt.subplots(3,2, figsize=(12, 6))
-axs = axs.ravel()
-y_left_max = 2
-y_right_max = 2000
-x_lim = 60
-ix = [3,4,6]
-
-for i, j, p in zip([0,1,2], [0,2,4], participants[ix]):
-    axs[j].set_title('Observed: %s' % p)
-    axs[j].hist(messages[messages['prev_sender']==p]['time_delay_seconds'].values, range=[0, x_lim], bins=x_lim, histtype='stepfilled')
-    axs[j].set_ylim([0, y_left_max])
-
-for i, j, p in zip([0,1,2], [1,3,5], participants[ix]):
-    axs[j].set_title('Posterior predictive distribution: %s' % p)
-    axs[j].hist(indiv_traces[p].get_values('y_pred'), range=[0, x_lim], bins=x_lim, histtype='stepfilled', color=colors[1])
-    axs[j].set_ylim([0, y_right_max])
-
-axs[4].set_xlabel('Response time (seconds)')
-axs[5].set_xlabel('Response time (seconds)')
-
-plt.tight_layout()
-st.pyplot()

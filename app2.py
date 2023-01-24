@@ -42,12 +42,12 @@ dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 dataset_h.drop(dataset_h.columns[[0,1]], axis = 1, inplace = True)
 st.write(dataset_h)
 covidbook=dataset_h
-from matplotlib import colors
-#N, bins, patches = axs.hist(50, bins = 50)
-#fracs = 50
-#norm = colors.Normalize(1, 50)
+
 ax = covidbook.groupby('Response Type')['Response Intensity'].size().plot(
-    kind='bar', figsize=(12,3), title='Number of implementation done per response', color=colors[1])
+    kind='bar', figsize=(12,3), title='Number of messages sent per recipient', color=colors[0])
+_ = ax.set_xlabel('Previous Sender')
+_ = ax.set_ylabel('Number of messages')
+_ = plt.xticks(rotation=45)
 _ = ax.set_xlabel('Response code')
 _ = ax.set_ylabel('Number of implementation')
 _ = plt.xticks(rotation=45)

@@ -125,6 +125,8 @@ _ = plt.ylabel('Frequency')
 _ = plt.title('Distribution of observed data')
 st.pyplot()
 
+
+
 with pm.Model() as model:
     hyper_alpha_sd = pm.Uniform('hyper_alpha_sd', lower=0, upper=50)
     hyper_alpha_mu = pm.Uniform('hyper_alpha_mu', lower=0, upper=50)
@@ -132,32 +134,24 @@ with pm.Model() as model:
     hyper_mu_sd = pm.Uniform('hyper_mu_sd', lower=0, upper=50)
     hyper_mu_mu = pm.Uniform('hyper_mu_mu', lower=0, upper=50)
     
-    alpha = pm.Gamma('alpha', mu=hyper_alpha_mu, sd=hyper_alpha_sd, shape=n_responses)
-    mu = pm.Gamma('mu', mu=hyper_mu_mu, sd=hyper_mu_sd, shape=n_responses)
+    alpha = pm.Gamma('alpha', mu=hyper_alpha_mu, sd=hyper_alpha_sd, shape=n_participants)
+    mu = pm.Gamma('mu', mu=hyper_mu_mu, sd=hyper_mu_sd, shape=n_participants)
     
     y_est = pm.NegativeBinomial('y_est', 
-                                mu=mu[responses_idx], 
-                                alpha=alpha[responses_idx], 
+                                mu=mu[participants_idx], 
+                                alpha=alpha[participants_idx], 
                                 observed=covidbook['Normalized_daily_deaths'].values)
     
     y_pred = pm.NegativeBinomial('y_pred', 
-                                 mu=mu[responses_idx], 
-                                 alpha=alpha[responses_idx],
-                                 shape=covidbook['Normalized_daily_deaths'].shape)
+                                 mu=mu[participants_idx], 
+                                 alpha=alpha[participants_idx],
+                                 shape=covidbook['Response Type'].shape)
     
     start = pm.find_MAP()
     step = pm.Metropolis()
     hierarchical_trace = pm.sample(20000, step, progressbar=True)
-
-_ = pm.traceplot(hierarchical_trace[12000:], 
-                 varnames=['mu','alpha','hyper_mu_mu',
-                           'hyper_mu_sd','hyper_alpha_mu',
-                           'hyper_alpha_sd'])
+_ = pm.traceplot(hierarchical_trace[12000:], varnames=['mu','alpha','hyper_mu_mu', 'hyper_mu_sd','hyper_alpha_mu','hyper_alpha_sd'])
 st.pyplot()
-
-
-
-
 
 
 

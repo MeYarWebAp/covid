@@ -9,7 +9,7 @@ import scipy
 import scipy.stats as stats
 from PIL import Image, ImageDraw, ImageFont
 onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQvfFW3Q3DW5wnNr?e=NsyagP"
-st.title("DOI")
+#st.title("DOI")
 @st.cache
 def create_onedrive_directdownload (onedrive_link):
     data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))

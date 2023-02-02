@@ -26,6 +26,7 @@ def covidbook():
     #kreis=pd.read_excel(crl)
     return pd.read_excel(crl)
 covidbook=covidbook()
+covidbook.drop(covidbook.columns[[0]], axis = 1, inplace = True)
 CB=covidbook
 st.dataframe(covidbook)
 col1, col2,col3 = st.columns(( 1,1,1))

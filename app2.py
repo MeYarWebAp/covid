@@ -7,6 +7,13 @@ import pymc3 as pm
 import scipy
 import scipy.stats as stats
 from PIL import Image, ImageDraw, ImageFont
+onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQvfFW3Q3DW5wnNr?e=NsyagP"
+@st.cache
+def create_onedrive_directdownload (onedrive_link):
+    data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
+    data_bytes64_String = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
+    resultUrl = f"https://api.onedrive.com/v1.0/shares/u!{data_bytes64_String}/root/content"
+    return resultUrl
 #import skimage
 #from skimage import transform as tf
 plt.style.use('bmh')
@@ -14,8 +21,9 @@ colors = ['#348ABD', '#A60628', '#7A68A6', '#467821', '#D55E00', '#CC79A7', '#56
 st.set_option('deprecation.showPyplotGlobalUse', False)
 #@st.cache(allow_output_mutation=False)
 def covidbook():
-    coBook =pd.read_excel(r"C:\Users\Hamed\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Anaconda3 (64-bit)\CCBook.xlsx")
-    return coBook
+    crl=create_onedrive_directdownload (onedrive_link)
+    #kreis=pd.read_excel(crl)
+    return pd.read_excel(crl)
 covidbook=covidbook()
 CB=covidbook
 st.dataframe(covidbook)

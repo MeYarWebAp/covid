@@ -55,17 +55,17 @@ em=st.selectbox("select the evaluation method",["","pooled model/ bayesian analy
 if em != "":
     col1, col2,col3 = st.columns(( 1,1,1))
     with col1:
-        df1=st.selectbox("select the distribution function 1",["","t","logNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
+        df1=st.selectbox("select the distribution function 1",["","t","LogNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
         if df1 != "":
             df1p1=st.number_input("Input the parameter 1",key=11)
             df1p2=st.number_input("Input the parameter 2",key=12)   
     with col2:
-        df2=st.selectbox("select the distribution function 2",["","t","logNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
+        df2=st.selectbox("select the distribution function 2",["","t","LogNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
         if df2 != "":
             df2p1=st.number_input("Input the parameter 1",key=21)
             df2p2=st.number_input("Input the parameter 2",key=22)
     with col3:
-        df3=st.selectbox("select the distribution function 3",["","t","logNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
+        df3=st.selectbox("select the distribution function 3",["","t","LogNormal","Normal","Gamma","Beta","NegativeBinomial","Uniform","HalfNormal","Cauchy"])
         if df3 != "":
             df3p1=st.number_input("Input the parameter 1",key=31)
             df3p2=st.number_input("Input the parameter 2",key=32)

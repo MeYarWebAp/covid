@@ -32,14 +32,14 @@ col1, col2,col3 = st.columns(( 1,1,1))
 
     
 
-with col2:
-    ec=st.selectbox("select the evaluation criteria",["","cases incidence7","cases incidence10","cases incidence14", "cases incidence7diff","cases incidence10diff","cases incidence14diff"], help="success measurement & credit assignment problem")
-    if ec != "":
+#with col2:
+ec=st.selectbox("select the evaluation criteria",["","cases incidence7","cases incidence10","cases incidence14", "cases incidence7diff","cases incidence10diff","cases incidence14diff"], help="success measurement & credit assignment problem")
+if ec != "":
         
-        covidbook[ec].plot()
-        st.pyplot() 
-        with col2:   
-            st.dataframe(covidbook[ec].describe(percentiles=[.05,.25,.5,.75,.9,.95]).transpose())
+    covidbook[ec].plot()
+    st.pyplot() 
+#with col2:   
+st.dataframe(covidbook[ec].describe(percentiles=[.05,.25,.5,.75,.9,.95]).transpose())
 es=st.selectbox("select the evaluation subject",["","Response Code","Response Intensity"])
 if es != "":
     ax = covidbook.groupby(es)[es+' Frequency'].size().plot(kind='bar', figsize=(12,3), title='Responses type & Frequencies of Gov covid19 Responses [02.03.2020-12.06.2022]', color=colors[5])

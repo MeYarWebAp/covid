@@ -44,6 +44,8 @@ if ec != "":
 st.dataframe(covidbook[ec].describe(percentiles=[.05,.25,.5,.75,.9,.95]).transpose())
 es=st.selectbox("select the evaluation subject",["","Response Code","Response Intensity"])
 if es != "":
+    covidbook.plot(y='Response Intensity',x='day')
+    st.pyplot() 
     ax = covidbook.groupby(es)[es+' Frequency'].size().plot(kind='bar', figsize=(12,3), title='Responses type & Frequencies of Gov covid19 Responses [02.03.2020-12.06.2022]', color=colors[5])
     _ = ax.set_xlabel('Response Code')
     _ = ax.set_ylabel('Response Code Frequency')

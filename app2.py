@@ -35,7 +35,7 @@ col1, col2,col3 = st.columns(( 1,1,1))
     
 
 #with col2:
-ec=st.selectbox("select the evaluation criteria",["","cases incidence7","cases incidence10","cases incidence14", "cases incidence7diff","cases incidence10diff","cases incidence14diff"], help="success measurement & credit assignment problem")
+ec=st.selectbox("select the evaluation criteria",["cases incidence7","cases incidence10","cases incidence14", "cases incidence7diff","cases incidence10diff","cases incidence14diff"], help="success measurement & credit assignment problem")
 if ec != "":
         
     covidbook[ec].plot()

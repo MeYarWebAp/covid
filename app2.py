@@ -7,8 +7,8 @@ import pymc3 as pm
 import scipy
 import scipy.stats as stats
 from PIL import Image, ImageDraw, ImageFont
-import skimage
-from skimage import transform as tf
+#import skimage
+#from skimage import transform as tf
 plt.style.use('bmh')
 colors = ['#348ABD', '#A60628', '#7A68A6', '#467821', '#D55E00', '#CC79A7', '#56B4E9', '#009E73', '#F0E442', '#0072B2']
 st.set_option('deprecation.showPyplotGlobalUse', False)

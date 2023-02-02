@@ -69,12 +69,5 @@ if em != "":
         if df3 != "":
             df3p1=st.number_input("Input the parameter 1",key=31)
             df3p2=st.number_input("Input the parameter 2",key=32)
-from IPython.display import Image
-from sklearn import preprocessing   
-
-le = preprocessing.LabelEncoder()
-responses_idx = le.fit_transform(covidbook['Response Code'])
-responses = le.classes_
-n_responses = len(responses)
 
 

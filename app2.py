@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import pandas as pd
 import itertools
 import matplotlib.pyplot as plt

@@ -55,7 +55,7 @@ if es != "":
     _ = plt.xticks(rotation=45)
     st.pyplot()   
 
-em=st.selectbox("select the evaluation method",["","pooled model/ bayesian analysis","partially pooled model/ hierarchical bayesian analysis"])
+em=st.selectbox("select the evaluation method",["","bayesian beliefs analysis","hierarchical bayesian beliefs analysis"])
 if em != "":
     col1, col2,col3 = st.columns(( 1,1,1))
     with col1:

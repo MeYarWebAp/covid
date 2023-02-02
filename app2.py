@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import itertools
@@ -8,8 +7,8 @@ import pymc3 as pm
 import scipy
 import scipy.stats as stats
 from PIL import Image, ImageDraw, ImageFont
-#import skimage
-#from skimage import transform as tf
+import skimage
+from skimage import transform as tf
 plt.style.use('bmh')
 colors = ['#348ABD', '#A60628', '#7A68A6', '#467821', '#D55E00', '#CC79A7', '#56B4E9', '#009E73', '#F0E442', '#0072B2']
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -19,16 +18,17 @@ def covidbook():
     return coBook
 covidbook=covidbook()
 CB=covidbook
+st.dataframe(covidbook)
 col1, col2,col3 = st.columns(( 1,1,1))
-with col1:
-    st.dataframe(covidbook)
+
+    
 
 with col2:
     ec=st.selectbox("select the evaluation criteria",["","cases incidence7","cases incidence10","cases incidence14", "cases incidence7diff","cases incidence10diff","cases incidence14diff"], help="success measurement & credit assignment problem")
     if ec != "":
-        with col3:
-            covidbook[ec].plot()
-            st.pyplot() 
+        
+        covidbook[ec].plot()
+        st.pyplot() 
         with col2:   
             st.dataframe(covidbook[ec].describe(percentiles=[.05,.25,.5,.75,.9,.95]).transpose())
 es=st.selectbox("select the evaluation subject",["","Response Code","Response Intensity"])

@@ -1,48 +1,9 @@
-"""
-Streamlit app for Bayesian worst-case analysis of a new feature rollout.
-Based on this article
-https://www.crosstab.io/articles/confidence-interval-interpretation, the scenario is
-that we're doing a staged rollout of a new feature on our company website, and we need
-to decide if we should proceed to the next stage. In this scenario, we want a
-*non-inferiority* analysis, not a traditional A/B test superiority analysis. We also
-want to use a Bayesian approach, so that our conclusions about the true click-rate have
-the interpretation that matches most decision-makers' intuition.
-.
-NOTE
-- Figures are saved in SVG format if this script is run in a REPL instead of Streamlit.
-  It would be better to save directly to PNG, but I can't figure out how to control the
-  resolution of the Altair figure saver. This way, I can use Inkscape to convert to PNG
-  with the desired resolution.
-"""
-
-import base64
-import altair as alt
-import copy
-import numpy as np
-import pandas as pd
-import scipy.stats as stats
-import streamlit as st
-import seaborn as sns
-from fitter import Fitter, get_common_distributions, get_distributions
-st.set_option('deprecation.showPyplotGlobalUse', False)
-onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQnETyxuqoKnWhJn?e=F3eehm"
-@st.cache
-def create_onedrive_directdownload (onedrive_link):
-    data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
-    data_bytes64_String = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
-    resultUrl = f"https://api.onedrive.com/v1.0/shares/u!{data_bytes64_String}/root/content"
-    return resultUrl
-
-
-alt.renderers.set_embed_options(scaleFactor=2)
-
-
-## Basic setup and app layout
-st.set_page_config(layout="wide")  # this needs to be the first Streamlit command called
+#st.stop()
 st.markdown("<h2 style='text-align: center;color:blue'>COVID-19 Response-Measures Future-Efficiency Estimator</h2>", unsafe_allow_html=True )
 crl=create_onedrive_directdownload (onedrive_link)
 dataset=pd.read_excel(crl)
-dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
+dataset.drop(dataset.columns[[0,1]], axis = 1, inplace = True)
+
 
 st.sidebar.title("Control Panel")
 left_col, middle_col, right_col = st.columns(3)
@@ -56,27 +17,15 @@ axis_title_size = 16
 
 ## User inputs on the control panel
 st.sidebar.subheader("Prior belief about the Response-Measures efficiency rate")
+st.sidebar.selectbox("evaluation criterion",["7-days incidence of the action","daily deaths cases ratio"])
 #if st.sidebar.checkbox("display dataset?"):
 st.sidebar.dataframe(dataset)
 
-prior_daily_cases = st.sidebar.number_input(
-    "Number of prior days",
-    min_value=1,
-    max_value=None,
-    value=100,
-    step=1,
-    help="The higher this number, the stronger your prior belief about Response-Measures efficiency rate before observing updated data.",
-)
-number_of_implemented_responses= st.sidebar.number_input(
-    "Number of observed days",
-    min_value=1,
-    max_value=None,
-    value=10,
-    step=1,
-    help="Number of days implemented measures are observed",
-)
-df_1 = dataset.iloc[:prior_daily_cases,:]
-df_2 = dataset.iloc[prior_daily_cases:(prior_daily_cases + number_of_implemented_responses),:]
+prior_daily_cases = st.sidebar.slider("Prior days",0, 833, (0, 100), help="The higher this number, the stronger your prior belief about Response-Measures efficiency rate before observing updated data.",)
+number_of_implemented_responses= st.sidebar.slider("Experiment days",0, 833, (100, 110),help="Number of days implemented measures are observed",)
+df_1 = dataset.iloc[prior_daily_cases[0]:prior_daily_cases[1],:]
+df_1=df_1.reset_index()
+df_2 = dataset.iloc[number_of_implemented_responses[0]:number_of_implemented_responses[1],:]
 df_2=df_2.reset_index()
 data=df_2
 #st.dataframe(data)
@@ -90,25 +39,27 @@ st.sidebar.pyplot()
 st.sidebar.subheader("Decision criteria")
 worst_case_threshold = st.sidebar.slider(
     "Worst-case deaths cases ratio threshold",
-    min_value=0.01,
-    max_value=0.5,
-    value=0.08,
-    step=0.005,
-    help="A deaths cases ratio below this value is defined to be the worst-case scenario",
+    min_value=0.001,
+    max_value=0.020,
+    value=0.005,
+    step=0.001,
+    help="A deaths cases ratio above this value is defined to be the worst-case scenario",
+    format="%f",
 )
 
 worst_case_max_proba = st.sidebar.slider(
     "Max acceptable worst-case probability",
-    min_value=0.0,
-    max_value=1.0,
-    value=0.1,
-    step=0.01,
+    min_value=0.001,
+    max_value=0.020,
+    value=0.005,
+    step=0.001,
     help="The larger this threshold, the more risk we're willing to accept that the worst-case scenario might happen.",
+    format="%f",
 )
 #dataset.drop(dataset.columns[[0]], axis = 1, inplace = True)
 
 
-prior = stats.beta(f.fitted_param["beta"][0], f.fitted_param["beta"][1])
+prior = stats.beta(f.fitted_param["beta"][0], f.fitted_param["beta"][1],f.fitted_param["beta"][2],f.fitted_param["beta"][3])
 
 
 ## Show key results over time. The index value indicates the data for that day has been
@@ -125,7 +76,7 @@ results = pd.DataFrame(
 posterior = copy.copy(prior)
 assert id(posterior) != id(prior)
 
-for t in range(number_of_implemented_responses):
+for t in range(len(data)):
 
     # This is the key posterior update logic, from the beta-binomial conjugate family.
     posterior = stats.beta(
@@ -187,8 +138,9 @@ if st.util.env_util.is_repl():
 left_col.subheader("Prior belief about the daily deaths cases ratio")
 left_col.altair_chart(fig, use_container_width=True)
 
-
+distro_grid = np.linspace(0, (xmax), 300)
 ## Draw the final posterior
+
 posterior_pdf = pd.DataFrame(
     {
         "daily deaths cases ratio": distro_grid,
@@ -200,7 +152,7 @@ fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, xmax])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, ( xmax)])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),
@@ -277,7 +229,7 @@ distro_fig = (
     alt.Chart(posterior_pdf)
     .mark_line(size=4)
     .encode(
-        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[xmin, xmax])),
+        x=alt.X("daily deaths cases ratio", title="daily deaths cases ratio", scale=alt.Scale(domain=[0, xmax])),
         y=alt.Y("posterior_pdf", title="Probability density"),
         tooltip=[
             alt.Tooltip("daily deaths cases ratio", title="daily deaths cases ratio", format=".3f"),
@@ -291,6 +243,12 @@ threshold_rule = (
     .mark_rule(size=2, color="red", clip=True)
     .encode(x="x", tooltip=[alt.Tooltip("x", title="Worst-case threshold")])
 )
+
+
+
+
+
+
 
 worst_case_post_pdf = posterior_pdf[posterior_pdf["daily deaths cases ratio"] < worst_case_threshold]
 
@@ -365,10 +323,10 @@ observed_daily_deaths_cases_ratio = observed_daily_deaths / observed_daily_cases
 worst_case_proba = posterior.cdf(worst_case_threshold)
 
 if worst_case_proba > worst_case_max_proba:
-    decision = "GO"
+    decision = "consented to GO ahead"
     emoji = "white_check_mark"
 else:
-    decision = "NO GO"
+    decision = "Not consented to GO ahead"
     emoji = "no_entry_sign"
 
 right_col.markdown(f"**Observed daily cases:** {observed_daily_cases:,}")
@@ -380,4 +338,8 @@ right_col.markdown(
 right_col.markdown(
     f"**P(daily deaths cases ratio < than critical threshold):** {worst_case_proba:.2%}"
 )
-right_col.subheader(f"***Final decision:*** {decision} :{emoji}:")
+right_col.markdown("<h2 style='text-align: center;color:blue'>Final decision:</h2>", unsafe_allow_html=True )
+right_col.markdown(f"**Final decision:** {decision} :{emoji}:")
+#right_col.write(f"***Final decision:*** {decision} :{emoji}:")
+#right_col.subheader(f"***Final decision:*** {decision} :{emoji}:")
+#st.dataframe(results)

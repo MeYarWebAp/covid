@@ -7,8 +7,7 @@ to decide if we should proceed to the next stage. In this scenario, we want a
 *non-inferiority* analysis, not a traditional A/B test superiority analysis. We also
 want to use a Bayesian approach, so that our conclusions about the true click-rate have
 the interpretation that matches most decision-makers' intuition.
-The Streamlit app code specifically is also discussed in this article:
-https://www.crosstab.io/articles/streamlit-review.
+.
 NOTE
 - Figures are saved in SVG format if this script is run in a REPL instead of Streamlit.
   It would be better to save directly to PNG, but I can't figure out how to control the
@@ -26,7 +25,7 @@ import streamlit as st
 import seaborn as sns
 from fitter import Fitter, get_common_distributions, get_distributions
 st.set_option('deprecation.showPyplotGlobalUse', False)
-onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQE0adb-zEMfPAI7?e=I2dgYa"
+onedrive_link ="https://1drv.ms/x/s!AquyG0uXFObDgQnETyxuqoKnWhJn?e=F3eehm"
 @st.cache
 def create_onedrive_directdownload (onedrive_link):
     data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))

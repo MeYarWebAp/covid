@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime
 lc=['Netherlands','Czechia','Lithuania','Austria','Poland','Slovenia','Estonia','Italy','Slovakia','Ireland','Denmark',
  'Iceland','Cyprus','Greece','Belgium','Bulgaria','France','Germany','Latvia','Spain','Norway','Romania','Liechtenstein',
  'Portugal','Luxembourg','Hungary','Malta','Croatia','Finland','Sweden']
@@ -17,6 +18,12 @@ lm=['EntertainmentVenuesPartial','RestaurantsCafesPartial','EntertainmentVenues'
  'StayHomeRiskGPartial','SocialCirclePartial']
 st.multiselect('select a country or a set of countries',lc)
 st.multiselect('select a government response or a set of government responses',lm)
+sd = st.date_input(
+    "data collection start date",
+    datetime.date(2020, 2, 3))
+se = st.date_input(
+    "data collection end date",
+    datetime.date(2022, 9, 6))
 st.number_input('select number of days per incidence')
 st.multiselect('select a method',['hierarchical method'])
 st.button('posterior predictive analysis')

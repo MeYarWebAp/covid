@@ -26,6 +26,15 @@ import pandas as pd
 import json
 import smtplib as s
 
+import gspread
+from gspread_dataframe import set_with_dataframe
+from google.oauth2.service_account import Credentials
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.oauth2 import service_account
+from gsheetsdb import connect
+from gspread_dataframe import get_as_dataframe, set_with_dataframe
+
 retries=15
 wait_time=1
 
@@ -48,7 +57,19 @@ def add_bg_from_url():
 #add_bg_from_url() 
 #st.markdown("![Alt Text](https://1drv.ms/u/s!AquyG0uXFObDfmRkSrVzdZ06rqQ?e=OD8ogL)") [image]
 
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/spreadsheets",
+    ],
+)
+conn = connect(credentials=credentials)
 
+    # Perform SQL query on the Google Sheet.
+# Uses st.cache to only rerun when the query changes or after 10 min.
+gc = gspread.authorize(credentials)
+gauth = GoogleAuth()
+drive = GoogleDrive(gauth)
 
 
 

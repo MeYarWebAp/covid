@@ -1,0 +1,9 @@
+[theme]
+base="light"
+primaryColor="#317904"
+secondaryBackgroundColor="#f4f9f9"
+textColor="#3a3a3d"
+font="serif"
+[global]
+dataFrameSerialization="legacy"
+
